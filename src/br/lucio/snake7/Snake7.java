@@ -130,6 +130,31 @@ public class Snake7 implements Cloneable {
 		this.listCells = listCells;
 	}
 
+	/**
+	 * Verifies if all cells of two Snakes is the same
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEquals = true;
+		Snake7 otherSnake = (Snake7) obj;
+		
+		if (getListCells() != null) {
+			
+			for (int i = 0; i < getListCells().size(); i++) {
+				Cell cellSnakeOne = getListCells().get(i);
+				Cell cellSnakeTwo = otherSnake.getListCells().get(i);
+				
+				if (cellSnakeOne != cellSnakeTwo) {
+					isEquals = false;
+					break;
+				}
+			}
+			
+		}
+		
+		return isEquals;
+	}
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Snake7 obj = (Snake7) super.clone();

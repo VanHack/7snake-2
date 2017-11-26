@@ -24,20 +24,30 @@ public class Main {
 	public static void main(String[] args) {
 		
 		if (args.length == 0) {
-			throw new SnakeException("Inform the file. (Example: java Main grid.csv)");
+			System.out.println("Inform the file and number of solutions to print.\n");
+			System.out.println("Example: java Main /test/grid.csv");
+			System.out.println("Or: java Main /test/grid.csv 2");
+			System.out.println("\nThe second parameter is optional. If none was informed, only 1 result will be printed.");
+			
+			return;
+		}
+
+		int totalResultsToBePrinted = 1;
+		if (args.length == 2) {
+			totalResultsToBePrinted = Integer.parseInt(args[1]);
 		}
 		
 		Main main = new Main();
 		String csv = main.readFileCsv(args[0]);
 
 		int[][] grid = main.loadCells(csv);
-		System.out.println("7-Snake Grid: " + grid.length + " lines and " + grid[0].length + "columns.");
+		System.out.println("7-Snake Grid of the csv file: " + grid.length + " lines and " + grid[0].length + " columns.\n");
 
 		main.printGrid(grid);
 
 		List<Snake7> listSnakes = main.searchSnakes(grid);
 
-		main.findResultedPairs(listSnakes, grid.length, grid[0].length);
+		main.findResultedPairs(listSnakes, grid.length, grid[0].length, totalResultsToBePrinted);
 	}
 
 	/**
@@ -136,6 +146,8 @@ public class Main {
 	 * @return
 	 */
 	public List<Snake7> searchSnakes(int[][] grid) {
+		System.out.println("\nSearching Snakes......");
+		
 		List<Snake7> listSnakes = new ArrayList<Snake7>();
 		listSnakes.add(new Snake7());
 
@@ -241,7 +253,14 @@ public class Main {
 		}
 	}
 
-	public void findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid) {
+	/**
+	 * Find the pairs of 7-Snakes
+	 * 
+	 * @param listSnakes
+	 * @param sizeLineGrid
+	 * @param sizeColumnGrid
+	 */
+	public void findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid, int resultsToPrint) {
 		Map<Integer, List<Snake7>> mapSumToSnakes = new HashMap<Integer, List<Snake7>>();
 
 		// creates a Map to group the snakes by the sum of their cells
@@ -254,15 +273,38 @@ public class Main {
 				mapSumToSnakes.put(sum, listSnakesFromMap);
 
 			}
-
-			listSnakesFromMap.add(snake);
+			
+			boolean isDuplicated = false;
+			for (Snake7 snakeToVerifyDuplicity : listSnakesFromMap) {
+				if (snakeToVerifyDuplicity.equals(snake)) {
+					isDuplicated = true;
+					break;
+				}
+			}
+			
+			if (!isDuplicated) {
+				listSnakesFromMap.add(snake);
+			}
 		}
 
+		// print the results found
+		System.out.println("\nResults found:");
+		for (Integer keySum : mapSumToSnakes.keySet()) {
+			List<Snake7> listSnakesFromMap = mapSumToSnakes.get(keySum);
+			
+			if (listSnakesFromMap.size() > 1) {
+				System.out.println("Value (sum of cells): " + keySum + ", Total of 7-snakes: " + listSnakesFromMap.size());
+			}
+		}
+
+		// finding the first result
+		System.out.println("\n\nPrinting firsts 7-Snakes found (" + resultsToPrint + " solution(s)):\n");
+		int totalPrinted = 0;
+		
+		breakFor:
 		for (Integer keySum : mapSumToSnakes.keySet()) {
 			List<Snake7> listSnakesFromMap = mapSumToSnakes.get(keySum);
 			int size = listSnakesFromMap.size();
-
-			System.out.println("Sum: " + keySum + " - Total of snakes: " + listSnakesFromMap.size());
 
 			for (int i = 0; i < size - 1; i++) {
 				Snake7 snakeOne = listSnakesFromMap.get(i);
@@ -270,18 +312,33 @@ public class Main {
 				for (int j = i + 1; j < size; j++) {
 					Snake7 snakeTwo = listSnakesFromMap.get(j);
 
-					if (!snakeOne.conflict(snakeTwo)) {
-						System.out.println("Pair of Snakes: " + keySum);
-						printSnake(snakeOne, sizeLineGrid, sizeColumnGrid, 1);
-						printSnake(snakeTwo, sizeLineGrid, sizeColumnGrid, 2);
+					if (!snakeOne.conflict(snakeTwo) && (totalPrinted < resultsToPrint)) {
+						totalPrinted++;
+						System.out.println("\nResult " + totalPrinted + ": (" + i + "," + j +")\n");
+
+						printSnake(snakeOne, snakeTwo, sizeLineGrid, sizeColumnGrid);
 					}
+					
+					
+				}
+				
+				if (totalPrinted >= resultsToPrint) {
+					break breakFor;
 				}
 			}
 
 		}
 	}
 
-	private void printSnake(Snake7 snake, int sizeLineGrid, int sizeColumnGrid, int marcador) {
+	/**
+	 * Prints on console the 7-Snake in a grid format
+	 * 
+	 * @param snake
+	 * @param sizeLineGrid
+	 * @param sizeColumnGrid
+	 * @param marcador
+	 */
+	private void printSnake(Snake7 snake1, Snake7 snake2, int sizeLineGrid, int sizeColumnGrid) {
 		int[][] newGridSnakes = new int[sizeLineGrid][sizeColumnGrid];
 
 		for (int k = 0; k < sizeLineGrid; k++) {
@@ -290,8 +347,12 @@ public class Main {
 			}
 		}
 
-		for (Cell cell : snake.getListCells()) {
-			newGridSnakes[cell.getLine()][cell.getColumn()] = marcador;
+		for (Cell cell : snake1.getListCells()) {
+			newGridSnakes[cell.getLine()][cell.getColumn()] = 1;
+		}
+
+		for (Cell cell : snake2.getListCells()) {
+			newGridSnakes[cell.getLine()][cell.getColumn()] = 2;
 		}
 
 		printGrid(newGridSnakes);
