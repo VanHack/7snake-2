@@ -49,7 +49,11 @@ public class Main {
 
 		List<Snake7> listSnakes = main.searchSnakes(grid);
 
-		main.findResultedPairs(listSnakes, grid.length, grid[0].length, totalResultsToBePrinted);
+		boolean resultFound = main.findResultedPairs(listSnakes, grid.length, grid[0].length, totalResultsToBePrinted);
+		
+		if (!resultFound) {
+			System.out.println("FAIL!! No such pair exists in the grid.");
+		}
 	}
 
 	/**
@@ -263,7 +267,8 @@ public class Main {
 	 * @param sizeLineGrid
 	 * @param sizeColumnGrid
 	 */
-	public void findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid, int resultsToPrint) {
+	public boolean findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid, int resultsToPrint) {
+		boolean resultFound = false;
 
 		// creates a Map to group the snakes by the sum of their cells
 		Map<Integer, List<Snake7>> mapSumToSnakes = createMapToGroupResultsOf7Snakes(listSnakes);
@@ -290,6 +295,7 @@ public class Main {
 						System.out.println("\nResult " + totalPrinted + ": Sum of the cells is " + snakeOne.sumValues() + "\n");
 
 						printSnake(snakeOne, snakeTwo, sizeLineGrid, sizeColumnGrid);
+						resultFound = true;
 					}
 
 				}
@@ -299,6 +305,8 @@ public class Main {
 				}
 			}
 		}
+		
+		return resultFound;
 	}
 
 	private Map<Integer, List<Snake7>> createMapToGroupResultsOf7Snakes(List<Snake7> listSnakes) {
