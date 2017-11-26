@@ -50,9 +50,10 @@ public class Main {
 		List<Snake7> listSnakes = main.searchSnakes(grid);
 
 		boolean resultFound = main.findResultedPairs(listSnakes, grid.length, grid[0].length, totalResultsToBePrinted);
-		
+
 		if (!resultFound) {
 			System.out.println("FAIL!! No such pair exists in the grid.");
+
 		}
 	}
 
@@ -267,13 +268,14 @@ public class Main {
 	 * @param sizeLineGrid
 	 * @param sizeColumnGrid
 	 */
-	public boolean findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid, int resultsToPrint) {
+	public boolean findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid,
+			int resultsToPrint) {
 		boolean resultFound = false;
 
 		// creates a Map to group the snakes by the sum of their cells
 		Map<Integer, List<Snake7>> mapSumToSnakes = createMapToGroupResultsOf7Snakes(listSnakes);
 
-		// print the results found group by the sum of 7-snakes's values 
+		// print the results found group by the sum of 7-snakes's values
 		printMapOf7SnakesGrouped(mapSumToSnakes);
 
 		// finding the first result
@@ -292,7 +294,8 @@ public class Main {
 
 					if (!snakeOne.conflict(snakeTwo) && (totalPrinted < resultsToPrint)) {
 						totalPrinted++;
-						System.out.println("\nResult " + totalPrinted + ": Sum of the cells is " + snakeOne.sumValues() + "\n");
+						System.out.println(
+								"\nResult " + totalPrinted + ": Sum of the cells is " + snakeOne.sumValues() + "\n");
 
 						printSnake(snakeOne, snakeTwo, sizeLineGrid, sizeColumnGrid);
 						resultFound = true;
@@ -305,7 +308,7 @@ public class Main {
 				}
 			}
 		}
-		
+
 		return resultFound;
 	}
 
@@ -338,7 +341,7 @@ public class Main {
 
 		return mapSumToSnakes;
 	}
-	
+
 	private void printMapOf7SnakesGrouped(Map<Integer, List<Snake7>> mapSumToSnakes) {
 		System.out.println("\nResults found:");
 		for (Integer keySum : mapSumToSnakes.keySet()) {
