@@ -1,5 +1,5 @@
 # 7snake
-Given a grid (10x10 for instance), this program identifies in this grid two 7-snakes that the sum of their values are equals and both doesn't have conflicted cells.
+Given a grid (10x10 for instance), this program identifies in this grid two 7-snakes that the sum of their values is equal and both doesn't have conflicted cells.
 
 This solution was developed with Java 8 using Eclipse IDE. The results are printed on console.
 
