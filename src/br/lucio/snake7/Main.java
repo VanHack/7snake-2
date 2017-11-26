@@ -22,13 +22,14 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		
+
 		if (args.length == 0) {
 			System.out.println("Inform the file and number of solutions to print.\n");
 			System.out.println("Example: java Main /test/grid.csv");
 			System.out.println("Or: java Main /test/grid.csv 2");
-			System.out.println("\nThe second parameter is optional. If none was informed, only 1 result will be printed.");
-			
+			System.out.println(
+					"\nThe second parameter is optional. If none was informed, only 1 result will be printed.");
+
 			return;
 		}
 
@@ -36,12 +37,13 @@ public class Main {
 		if (args.length == 2) {
 			totalResultsToBePrinted = Integer.parseInt(args[1]);
 		}
-		
+
 		Main main = new Main();
 		String csv = main.readFileCsv(args[0]);
 
 		int[][] grid = main.loadCells(csv);
-		System.out.println("7-Snake Grid of the csv file: " + grid.length + " lines and " + grid[0].length + " columns.\n");
+		System.out.println(
+				"7-Snake Grid of the csv file: " + grid.length + " lines and " + grid[0].length + " columns.\n");
 
 		main.printGrid(grid);
 
@@ -90,18 +92,18 @@ public class Main {
 	public int[][] loadCells(String csv) {
 		List<Integer> listInt = new ArrayList<Integer>();
 
-		int lines = 0;
-		int columns = 0;
+		int totalLines = 0;
+		int totalColumns = 0;
 
 		// Read the values and save in a temporary list
 		StringTokenizer token = new StringTokenizer(csv, "\n");
-		lines = token.countTokens();
+		totalLines = token.countTokens();
 
 		while (token.hasMoreTokens()) {
 			String line = token.nextToken();
 
 			StringTokenizer token2 = new StringTokenizer(line, ",");
-			columns = token2.countTokens();
+			totalColumns = token2.countTokens();
 			while (token2.hasMoreTokens()) {
 				String cell = token2.nextToken();
 				listInt.add(Integer.parseInt(cell));
@@ -110,29 +112,30 @@ public class Main {
 		}
 
 		// Create the grid with values loaded from the file
-		int[][] grid = new int[lines][columns];
+		int[][] grid = new int[totalLines][totalColumns];
 
-		int i = 0, j = 0;
+		int line = 0;
+		int column = 0;
 		for (Integer valueCell : listInt) {
-			grid[i][j] = valueCell;
+			grid[line][column] = valueCell;
 
-			j++;
+			column++;
 
-			if (j >= columns) {
-				j = 0;
-				i++;
+			if (column >= totalColumns) {
+				column = 0;
+				line++;
 			}
 		}
 
 		// load the cells in a Map to be re-used when create the 7-snakes
-		for (i = 0; i < grid.length; i++) {
-			for (j = 0; j < grid[i].length; j++) {
+		for (line = 0; line < grid.length; line++) {
+			for (column = 0; column < grid[line].length; column++) {
 				Cell cell = new Cell();
-				cell.setLine(i);
-				cell.setColumn(j);
-				cell.setValue(grid[i][j]);
+				cell.setLine(line);
+				cell.setColumn(column);
+				cell.setValue(grid[line][column]);
 
-				mapCells.put(i + ";" + j, cell);
+				mapCells.put(line + ";" + column, cell);
 			}
 		}
 
@@ -147,7 +150,7 @@ public class Main {
 	 */
 	public List<Snake7> searchSnakes(int[][] grid) {
 		System.out.println("\nSearching Snakes......");
-		
+
 		List<Snake7> listSnakes = new ArrayList<Snake7>();
 		listSnakes.add(new Snake7());
 
@@ -202,54 +205,54 @@ public class Main {
 	}
 
 	private void shiftRight(int[][] grid, int line, int column, List<Snake7> listSnakes) {
-		column++;
+		int nextColumn = column + 1;
 
 		Snake7 snake = listSnakes.get(listSnakes.size() - 1);
-		if ((column < grid[line].length) && (!snake.isValidPosition(line, column))) {
-			String id = line + ";" + column;
+		if ((nextColumn < grid[line].length) && (!snake.isValidPosition(line, nextColumn))) {
+			String id = line + ";" + nextColumn;
 			Cell cell = mapCells.get(id);
 			snake.addCell(cell);
 
-			searchCells(grid, line, column, listSnakes);
+			searchCells(grid, line, nextColumn, listSnakes);
 		}
 	}
 
 	private void shiftLeft(int[][] grid, int line, int column, List<Snake7> listSnakes) {
-		column--;
+		int nextColumn = column - 1;
 
 		Snake7 snake = listSnakes.get(listSnakes.size() - 1);
-		if ((column >= 0) && (!snake.isValidPosition(line, column))) {
-			String id = line + ";" + column;
+		if ((nextColumn >= 0) && (!snake.isValidPosition(line, nextColumn))) {
+			String id = line + ";" + nextColumn;
 			Cell cell = mapCells.get(id);
 			snake.addCell(cell);
 
-			searchCells(grid, line, column, listSnakes);
+			searchCells(grid, line, nextColumn, listSnakes);
 		}
 	}
 
 	private void shiftTop(int[][] grid, int line, int column, List<Snake7> listSnakes) {
-		line--;
+		int nextLine = line - 1;
 
 		Snake7 snake = listSnakes.get(listSnakes.size() - 1);
-		if ((line >= 0) && (!snake.isValidPosition(line, column))) {
-			String id = line + ";" + column;
+		if ((nextLine >= 0) && (!snake.isValidPosition(nextLine, column))) {
+			String id = nextLine + ";" + column;
 			Cell cell = mapCells.get(id);
 			snake.addCell(cell);
 
-			searchCells(grid, line, column, listSnakes);
+			searchCells(grid, nextLine, column, listSnakes);
 		}
 	}
 
 	private void shiftBottom(int[][] grid, int line, int column, List<Snake7> listSnakes) {
-		line++;
+		int nextLine = line + 1;
 
 		Snake7 snake = listSnakes.get(listSnakes.size() - 1);
-		if ((line < grid.length) && (!snake.isValidPosition(line, column))) {
-			String id = line + ";" + column;
+		if ((nextLine < grid.length) && (!snake.isValidPosition(nextLine, column))) {
+			String id = nextLine + ";" + column;
 			Cell cell = mapCells.get(id);
 			snake.addCell(cell);
 
-			searchCells(grid, line, column, listSnakes);
+			searchCells(grid, nextLine, column, listSnakes);
 		}
 	}
 
@@ -261,6 +264,44 @@ public class Main {
 	 * @param sizeColumnGrid
 	 */
 	public void findResultedPairs(List<Snake7> listSnakes, int sizeLineGrid, int sizeColumnGrid, int resultsToPrint) {
+
+		// creates a Map to group the snakes by the sum of their cells
+		Map<Integer, List<Snake7>> mapSumToSnakes = createMapToGroupResultsOf7Snakes(listSnakes);
+
+		// print the results found group by the sum of 7-snakes's values 
+		printMapOf7SnakesGrouped(mapSumToSnakes);
+
+		// finding the first result
+		System.out.println("\n\nPrinting firsts 7-Snakes found (" + resultsToPrint + " solution(s)):\n");
+		int totalPrinted = 0;
+
+		breakFor: for (Integer keySum : mapSumToSnakes.keySet()) {
+			List<Snake7> listSnakesFromMap = mapSumToSnakes.get(keySum);
+			int size = listSnakesFromMap.size();
+
+			for (int i = 0; i < size - 1; i++) {
+				Snake7 snakeOne = listSnakesFromMap.get(i);
+
+				for (int j = i + 1; j < size; j++) {
+					Snake7 snakeTwo = listSnakesFromMap.get(j);
+
+					if (!snakeOne.conflict(snakeTwo) && (totalPrinted < resultsToPrint)) {
+						totalPrinted++;
+						System.out.println("\nResult " + totalPrinted + ": Sum of the cells is " + snakeOne.sumValues() + "\n");
+
+						printSnake(snakeOne, snakeTwo, sizeLineGrid, sizeColumnGrid);
+					}
+
+				}
+
+				if (totalPrinted >= resultsToPrint) {
+					break breakFor;
+				}
+			}
+		}
+	}
+
+	private Map<Integer, List<Snake7>> createMapToGroupResultsOf7Snakes(List<Snake7> listSnakes) {
 		Map<Integer, List<Snake7>> mapSumToSnakes = new HashMap<Integer, List<Snake7>>();
 
 		// creates a Map to group the snakes by the sum of their cells
@@ -273,7 +314,7 @@ public class Main {
 				mapSumToSnakes.put(sum, listSnakesFromMap);
 
 			}
-			
+
 			boolean isDuplicated = false;
 			for (Snake7 snakeToVerifyDuplicity : listSnakesFromMap) {
 				if (snakeToVerifyDuplicity.equals(snake)) {
@@ -281,52 +322,24 @@ public class Main {
 					break;
 				}
 			}
-			
+
 			if (!isDuplicated) {
 				listSnakesFromMap.add(snake);
 			}
 		}
 
-		// print the results found
+		return mapSumToSnakes;
+	}
+	
+	private void printMapOf7SnakesGrouped(Map<Integer, List<Snake7>> mapSumToSnakes) {
 		System.out.println("\nResults found:");
 		for (Integer keySum : mapSumToSnakes.keySet()) {
 			List<Snake7> listSnakesFromMap = mapSumToSnakes.get(keySum);
-			
+
 			if (listSnakesFromMap.size() > 1) {
-				System.out.println("Value (sum of cells): " + keySum + ", Total of 7-snakes: " + listSnakesFromMap.size());
+				System.out.println(
+						"Value (sum of cells): " + keySum + ", Total of 7-snakes: " + listSnakesFromMap.size());
 			}
-		}
-
-		// finding the first result
-		System.out.println("\n\nPrinting firsts 7-Snakes found (" + resultsToPrint + " solution(s)):\n");
-		int totalPrinted = 0;
-		
-		breakFor:
-		for (Integer keySum : mapSumToSnakes.keySet()) {
-			List<Snake7> listSnakesFromMap = mapSumToSnakes.get(keySum);
-			int size = listSnakesFromMap.size();
-
-			for (int i = 0; i < size - 1; i++) {
-				Snake7 snakeOne = listSnakesFromMap.get(i);
-
-				for (int j = i + 1; j < size; j++) {
-					Snake7 snakeTwo = listSnakesFromMap.get(j);
-
-					if (!snakeOne.conflict(snakeTwo) && (totalPrinted < resultsToPrint)) {
-						totalPrinted++;
-						System.out.println("\nResult " + totalPrinted + ": (" + i + "," + j +")\n");
-
-						printSnake(snakeOne, snakeTwo, sizeLineGrid, sizeColumnGrid);
-					}
-					
-					
-				}
-				
-				if (totalPrinted >= resultsToPrint) {
-					break breakFor;
-				}
-			}
-
 		}
 	}
 
@@ -361,6 +374,7 @@ public class Main {
 
 	/**
 	 * Prints the grid on console
+	 * 
 	 * @param grid
 	 */
 	public void printGrid(int[][] grid) {

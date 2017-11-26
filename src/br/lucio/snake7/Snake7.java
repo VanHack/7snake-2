@@ -84,10 +84,7 @@ public class Snake7 implements Cloneable {
 		}
 
 		// the new position has only 1 adjacent cell
-		if (qtdCellsAdjacents == 1) {
-			return true;
-		}
-		return false;
+		return (qtdCellsAdjacents == 1);
 	}
 
 	/**
@@ -113,7 +110,7 @@ public class Snake7 implements Cloneable {
 
 		for (Cell cell : getListCells()) {
 			for (Cell cellOtherSnake : otherSnake.getListCells()) {
-				if (cell == cellOtherSnake) {
+				if (cell.equals(cellOtherSnake)) {
 					return true;
 				}
 			}
@@ -144,7 +141,7 @@ public class Snake7 implements Cloneable {
 				Cell cellSnakeOne = getListCells().get(i);
 				Cell cellSnakeTwo = otherSnake.getListCells().get(i);
 				
-				if (cellSnakeOne != cellSnakeTwo) {
+				if (!cellSnakeOne.equals(cellSnakeTwo)) {
 					isEquals = false;
 					break;
 				}

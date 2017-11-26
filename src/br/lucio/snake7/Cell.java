@@ -35,5 +35,13 @@ public class Cell {
 	public void setValue(int value) {
 		this.value = value;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Cell otherCell = (Cell) obj;
+		return (this.getLine() == otherCell.getLine())
+				&& (this.getColumn() == otherCell.getColumn())
+				&& (this.getValue() == otherCell.getValue());
+	}
 
 }
