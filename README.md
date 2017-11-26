@@ -24,7 +24,7 @@ First you have to specify some parameters to execute it.
 
   - Arguments: "/my-workspace/7snake/src/grid.csv" or "/my-workspace/7snake/src/grid.csv 2"
 
-2) Or execute the class Main using command line.
+2) Or execute the class Main using command line. You can run it in the /bin directory.
 
   - java br.lucio.snake7.Main grid.csv (print the first 7-Snake found)
 
