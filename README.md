@@ -5,7 +5,7 @@ This solution was developed with Java 8 using Eclipse IDE. The results are print
 
 If you want to execute this code you have two options:
 
-1) Open the project in a IDE like Eclipse and Run the class Main.java.
+1) Open the project using a IDE like Eclipse and Run the class Main.java.
 First you have to specify some parameters to execute it.
 
 Arguments: "/my-workspace/7snake/src/grid.csv" or "/my-workspace/7snake/src/grid.csv 2"
@@ -13,6 +13,7 @@ Arguments: "/my-workspace/7snake/src/grid.csv" or "/my-workspace/7snake/src/grid
 2) Or execute the class Main using command line.
 
 java br.lucio.snake7.Main grid.csv (print the first 7-Snake found)
+
 java br.lucio.snake7.Main grid.csv 3 (in this case, print the first 3 7-Snake found)
 
 
